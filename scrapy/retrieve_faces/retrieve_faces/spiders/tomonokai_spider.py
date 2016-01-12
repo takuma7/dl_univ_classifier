@@ -24,6 +24,7 @@ class TomonokaiSpider(scrapy.Spider):
             img_src = img_cell.xpath('p/img/@src').extract()[0]
             item['image_urls'] = [urlparse.urljoin(response.url, img_src)]
             yield item
-        next_link = response.xpath('//ul[@class="page_navi"]/li[@class="current"]/follwing-sibling::li[1]/a/@href').extract()[0].strip()
+        next_link = response.xpath('//ul[@class="page_navi"]/li[@class="current"]/following-sibling::li[1]/a/@href').extract()[0].strip()
+        self.logger.debug(next_link)
         if next_link:
             yield scrapy.Request(next_link, callback=self.parse)
