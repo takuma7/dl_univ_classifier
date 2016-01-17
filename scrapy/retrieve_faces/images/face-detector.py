@@ -48,16 +48,16 @@ def process_fpath(imagePath):
     # print("Found %d faces in %s" % (len(faces), imagePath))
     # if len(faces) != 1:
     if len(faces) == 0:
-        for i, (x,y,w,h) in enumerate(faces):
-            if i==0:
-                col = (0,0,255)
-            else:
-                col = (0,255,0)
-            cx = x+w//2
-            cy = y+h//2
-            ll = min(w,h)
-            l = ll//2
-            cv2.rectangle(image, (cx-l,cy-l), (cx+l, cy+l), col, 2)
+        # for i, (x,y,w,h) in enumerate(faces):
+            # if i==0:
+                # col = (0,0,255)
+            # else:
+                # col = (0,255,0)
+            # cx = x+w//2
+            # cy = y+h//2
+            # ll = min(w,h)
+            # l = ll//2
+            # cv2.rectangle(image, (cx-l,cy-l), (cx+l, cy+l), col, 2)
         cv2.imwrite(os.path.join(imageTrashDirPath, "%d-%s" % (len(faces), imagePath) ), image)
     if len(faces) > 0:
         x,y,w,h = faces[0]
