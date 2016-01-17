@@ -15,7 +15,7 @@ class TomonokaiSpider(scrapy.Spider):
     with open("data/universities.csv", 'r') as f:
         reader = csv.reader(f)
         for row in reader:
-            universities.append(row[0])
+            universities.append(row[0].decode('utf-8'))
 
     def parse(self, response):
         for tr in response.xpath('//table[@class="teacher-text-swipe"]/tbody/tr'):
@@ -23,6 +23,9 @@ class TomonokaiSpider(scrapy.Spider):
             name_cell = tr.xpath('td[2]')
             univ_cell = tr.xpath('td[3]')
             univ_name = univ_cell.xpath('text()').extract()[0].strip()
+            if univ_name not in self.universities:
+                continue
+
             dept_cell = tr.xpath('td[4]')
             item = FaceItem()
             item['name'] = name_cell.xpath('a/text()').extract()[0].strip()
