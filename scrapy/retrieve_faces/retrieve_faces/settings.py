@@ -14,9 +14,16 @@ BOT_NAME = 'retrieve_faces'
 SPIDER_MODULES = ['retrieve_faces.spiders']
 NEWSPIDER_MODULE = 'retrieve_faces.spiders'
 
-ITEM_PIPELINES = {'scrapy.pipelines.images.ImagesPipeline': 1}
+ITEM_PIPELINES = {
+    # 'scrapy.contrib.pipeline.images.ImagesPipeline': 300
+    'scrapy.pipelines.images.ImagesPipeline': 300
+    }
 IMAGES_STORE = 'images'
 
+FEED_EXPORTERS = {
+    'nejl': 'retrieve_faces.exporters.NonEscapeJsonLinesItemExporter',
+    'nejsonlines': 'retrieve_faces.exporters.NonEscapeJsonLinesItemExporter',
+}
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'retrieve_faces (+http://www.yourdomain.com)'
 
