@@ -66,7 +66,7 @@ class ToshinSpider(scrapy.Spider):
             item['name']= pane2.xpath('.//span[@class="name"]/text()').extract()[0].strip()
             keisho  = pane2.xpath('.//span[@class="keisho"]/text()').extract()[0].strip()
             item['gender']      = 'm' if keisho == u"くん" else 'f'
-            item['university']  = univ_name.decode('utf-8')
+            item['university']  = univ_name
             item['department']  = face_cade.xpath('div[@class="pane1"]//span[@class="course"]/text()').extract()[0].strip()
             face_img_url = pane2.xpath('.//img[@class="face"]/@src').extract()[0]
             item['image_urls'] = [urlparse.urljoin(response.url, face_img_url)]
