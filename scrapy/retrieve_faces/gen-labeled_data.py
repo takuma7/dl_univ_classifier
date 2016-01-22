@@ -56,15 +56,21 @@ print('\tfemale:\t%d' % len(f_students))
 
 with open('labeled_data_m.txt', 'w') as f:
     for m_student in m_students:
-        f.write("{path} {label}\n".format(
-            path=m_student['images'][0]['path'],
-            label=universities[m_student['university']]['int_id']))
+        path = m_student['images'][0]['path']
+        faces_path = 'images/' + path.replace('full', 'faces')
+        if os.path.isfile(faces_path):
+            f.write("{path} {label}\n".format(
+                path=faces_path,
+                label=universities[m_student['university']]['int_id']))
 
 with open('labeled_data_f.txt', 'w') as f:
     for f_student in f_students:
-        f.write("{path} {label}\n".format(
-            path=f_student['images'][0]['path'],
-            label=universities[f_student['university']]['int_id']))
+        path = f_student['images'][0]['path']
+        faces_path = 'images/' + path.replace('full', 'faces')
+        if os.path.isfile(faces_path):
+            f.write("{path} {label}\n".format(
+                path=faces_path,
+                label=universities[f_student['university']]['int_id']))
 
 m_students_by_univ = {}
 f_students_by_univ = {}
