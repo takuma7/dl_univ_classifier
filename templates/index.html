@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+  </head>
+  <body>
+    <video id="video" width="640" height="480" autoplay></video>
+    <button id="snap" class="btn btn-primary">Snap</button>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <script>
+      function dataURItoBlob(dataURI) {
+          // convert base64/URLEncoded data component to raw binary data held in a string
+          var byteString;
+          if (dataURI.split(',')[0].indexOf('base64') >= 0)
+              byteString = atob(dataURI.split(',')[1]);
+          else
+              byteString = unescape(dataURI.split(',')[1]);
+
+          // separate out the mime component
+          var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+          // write the bytes of the string to a typed array
+          var ia = new Uint8Array(byteString.length);
+          for (var i = 0; i < byteString.length; i++) {
+              ia[i] = byteString.charCodeAt(i);
+          }
+
+          return new Blob([ia], {type:mimeString});
+      }
+      // Put event listeners into place
+      window.addEventListener("DOMContentLoaded", function() {
+        // Grab elements, create settings, etc.
+        var canvas = document.getElementById("canvas"),
+        context = canvas.getContext("2d"),
+        video = document.getElementById("video"),
+        videoObj = { "video": true },
+        errBack = function(error) {
+          console.log("Video capture error: ", error.code);
+        };
+        var CV_API_URL = 'http://127.0.0.1:5000/classify';
+
+        // Put video listeners into place
+        if(navigator.getUserMedia) { // Standard
+          navigator.getUserMedia(videoObj, function(stream) {
+            video.src = stream;
+            video.play();
+          }, errBack);
+        } else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
+          navigator.webkitGetUserMedia(videoObj, function(stream){
+            video.src = window.webkitURL.createObjectURL(stream);
+            video.play();
+          }, errBack);
+        }
+        else if(navigator.mozGetUserMedia) { // Firefox-prefixed
+          navigator.mozGetUserMedia(videoObj, function(stream){
+            video.src = window.URL.createObjectURL(stream);
+            video.play();
+          }, errBack);
+        }
+
+        // Trigger photo take
+        document.getElementById("snap").addEventListener("click", function() {
+          context.drawImage(video, 0, 0, 640, 480);
+          var dataURL = canvas.toDataURL('image/jpeg', 0.5);
+          var blob = dataURItoBlob(dataURL);
+          var fd = new FormData();
+          fd.append("photo", blob);
+          $.ajax({
+            url: CV_API_URL,
+            data: fd,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function(data){
+              console.log(data);
+              data.faces.forEach(function(face){
+                context.beginPath();
+                context.rect(face[0],face[1],face[2],face[3]);
+                context.strokeStyle = "red";
+                context.lineWidth = "3";
+                context.stroke();
+                context.closePath();
+              });
+            }
+          });
+        });
+      }, false);
+
+    </script>
+  </body>
+</html>
