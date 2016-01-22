@@ -50,7 +50,8 @@ def classify():
                 #####
             return  jsonify(
                         faces_num=len(faces),
-                        faces=faces_list
+                        faces=faces_list,
+                        results=result_list
                     )
         else:
             return jsonify(
