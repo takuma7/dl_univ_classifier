@@ -70,7 +70,7 @@
         errBack = function(error) {
           console.log("Video capture error: ", error.code);
         };
-        var CV_API_URL = 'http://127.0.0.1:5000/classify';
+        var CV_API_URL = 'http://localhost:35000/classify';
 
         // Put video listeners into place
         if(navigator.getUserMedia) { // Standard
@@ -120,8 +120,29 @@
                 context.fillText(""+i, face[0]+10,face[1]+30);
                 context.closePath();
               });
+              $(".results-wrapper").html("<ul></ul>");
+
+              var univ = [
+                    "東京大学",
+                    "一橋大学",
+                    "早稲田大学",
+                    "慶應義塾大学",
+                    "青山学院大学",
+                    "立教大学"     ,
+                    "法政大学"     ,
+                    "中央大学"     ,
+                    "東京工業大学",
+                    "上智大学",
+                    "東京理科大学"];
+
+              data.results.forEach(function(result){
+                      result.forEach(function(val,i){
+                          $(".results-wrapper ul").append("<li>"+univ[i]+": "+val+"</li>");});
+                      $(".results-wrapper ul").append("<br />");
+              });
             }
           });
+              //$(".results
         });
       }, false);
 
