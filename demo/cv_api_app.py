@@ -60,7 +60,7 @@ def classify():
                 resized_face_img = cv2.resize(face_img, dim, interpolation=cv2.INTER_AREA)
                 #####
                 # TODO: implement here. Do something with face_img
-                '''
+                
                 mean_image = pickle.load(open("nin-256/mean.npy", 'rb'))
                 model = pickle.load(open("nin-256/model",'rb'))
                 cropwidth = 256 - model.insize 
@@ -82,7 +82,7 @@ def classify():
                 score = model.predict(x)
                 print score
                 index_univ = np.argsort(score[0])
-                '''
+                
 
                 #####
             return  jsonify(
