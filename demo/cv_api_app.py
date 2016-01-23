@@ -1,5 +1,7 @@
 from flask import Flask, render_template, json, jsonify, request
 from flask.ext.cors import CORS
+import matplotlib
+matplotlib.use('Agg')
 import numpy as np
 import cv2
 import io
@@ -38,8 +40,8 @@ def classify():
         inmem_file.reset()
         data = np.fromstring(inmem_file.getvalue(), dtype=np.uint8)
         color_image_flag = 1
-        image = cv2.imdecode(data, color_image_flag)
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        img = cv2.imdecode(data, color_image_flag)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         faces = faceCascade.detectMultiScale(
                     gray,
                     scaleFactor=1.1,
@@ -56,12 +58,13 @@ def classify():
                 ll = min(w,h)
                 l  = ll//2
                 faces_list.append([cx-l, cy-l, ll, ll])
-                face_img =image[(cy-l):(cy+l), (cx-l):(cx+l)].copy()
+                face_img =img[(cy-l):(cy+l), (cx-l):(cx+l)].copy()
                 # img_width = 256
                 # r = img_width / face_img.shape[1]
                 # dim = (img_width, int(face_img.shape[0]*r))
                 # resized_face_img = cv2.resize(face_img, dim, interpolation=cv2.INTER_AREA)
                 resized_face_img = cv2.resize(face_img, (256,256), interpolation=cv2.INTER_AREA)
+                print(resized_face_img.shape)
                 #####
                 # TODO: implement here. Do something with face_img
 
@@ -82,11 +85,13 @@ def classify():
                 image = image[:, top:bottom, left:right].astype(np.float32)
                 image -= mean_image[:, top:bottom, left:right]
                 image /= 255
+                x = np.ndarray((1, 3, model.insize, model.insize), dtype=np.float32)
                 x[0]=image
                 score = model.predict(x)
                 print(score)
                 index_univ = np.argsort(score[0])
-                # results.append(score.tolist())
+                print(index_univ)
+                result_list.append(score[0].tolist())
 
                 #####
             return  jsonify(
