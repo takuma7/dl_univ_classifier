@@ -16,6 +16,7 @@ import cPickle as pickle
 from six.moves import queue
 import random
 import nin
+from cStringIO import StringIO
 
 app = Flask(__name__)
 CORS(app)
@@ -31,8 +32,10 @@ def index():
 def classify():
     if request.method == 'POST' and 'photo' in request.files:
         photo = request.files['photo']
-        inmem_file = io.BytesIO()
+        # inmem_file = io.BytesIO()
+        inmem_file = StringIO()
         photo.save(inmem_file)
+        inmem_file.reset()
         data = np.fromstring(inmem_file.getvalue(), dtype=np.uint8)
         color_image_flag = 1
         image = cv2.imdecode(data, color_image_flag)
@@ -60,10 +63,10 @@ def classify():
                 resized_face_img = cv2.resize(face_img, dim, interpolation=cv2.INTER_AREA)
                 #####
                 # TODO: implement here. Do something with face_img
-                
+
                 mean_image = pickle.load(open("nin-256/mean.npy", 'rb'))
                 model = pickle.load(open("nin-256/model",'rb'))
-                cropwidth = 256 - model.insize 
+                cropwidth = 256 - model.insize
                 # Data loading routine
                 image = np.asarray(resized_face_img).transpose(2, 0, 1)
                 #image = src_img.transpose(2, 0, 1)
@@ -80,9 +83,9 @@ def classify():
                 image /= 255
                 x[0]=image
                 score = model.predict(x)
-                print score
+                print(score)
                 index_univ = np.argsort(score[0])
-                
+
 
                 #####
             return  jsonify(
