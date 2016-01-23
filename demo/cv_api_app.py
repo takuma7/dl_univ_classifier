@@ -70,11 +70,11 @@ def classify():
                 # Data loading routine
                 image = np.asarray(resized_face_img).transpose(2, 0, 1)
                 #image = src_img.transpose(2, 0, 1)
-                if center:
-                    top = left = cropwidth / 2
-                else:
-                    top = random.randint(0, cropwidth - 1)
-                    left = random.randint(0, cropwidth - 1)
+                # if center:
+                top = left = cropwidth / 2
+                # else:
+                    # top = random.randint(0, cropwidth - 1)
+                    # left = random.randint(0, cropwidth - 1)
                 bottom = model.insize + top
                 right = model.insize + left
 
@@ -85,7 +85,7 @@ def classify():
                 score = model.predict(x)
                 print(score)
                 index_univ = np.argsort(score[0])
-
+                # results.append(score.tolist())
 
                 #####
             return  jsonify(
