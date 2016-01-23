@@ -4,11 +4,42 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
     <script type="text/javascript" src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+    <style>
+      .btn-wrapper {
+        text-align:center;
+        width: 100%;
+        padding: 1em;
+        box-sizing: border-box;
+      }
+      video {
+        width: 100%;
+      }
+      canvas {
+        width: 100%;
+      }
+    </style>
   </head>
   <body>
-    <video id="video" width="640" height="480" autoplay></video>
-    <button id="snap" class="btn btn-primary">Snap</button>
-    <canvas id="canvas" width="640" height="480"></canvas>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <video id="video" width="640" height="480" autoplay></video>
+          <div class="btn-wrapper">
+            <button id="snap" class="btn btn-primary"><i class="glyphicon glyphicon-camera"></i></button>
+          </div>
+          <canvas id="canvas" width="640" height="480"></canvas>
+        </div>
+        <div class="col-md-6">
+          <div class="results-wrapper">
+            <h1><span>[0]</span><span class="univ_name">東大生</span></h1>
+            <ul>
+              <li>東京大学: 0.323</li>
+              <li>東京工業大学: 0.112</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
     <script>
       function dataURItoBlob(dataURI) {
           // convert base64/URLEncoded data component to raw binary data held in a string
@@ -76,12 +107,17 @@
             dataType: 'json',
             success: function(data){
               console.log(data);
-              data.faces.forEach(function(face){
+              data.faces.forEach(function(face, i){
                 context.beginPath();
                 context.rect(face[0],face[1],face[2],face[3]);
                 context.strokeStyle = "red";
                 context.lineWidth = "3";
                 context.stroke();
+                context.closePath();
+                context.beginPath();
+                context.font = "30px Arial";
+                context.fillStyle = "red";
+                context.fillText(""+i, face[0]+10,face[1]+30);
                 context.closePath();
               });
             }
