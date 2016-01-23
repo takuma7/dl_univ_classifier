@@ -57,10 +57,11 @@ def classify():
                 l  = ll//2
                 faces_list.append([cx-l, cy-l, ll, ll])
                 face_img =image[(cy-l):(cy+l), (cx-l):(cx+l)].copy()
-                img_width = 256
-                r = img_width / face_img.shape[1]
-                dim = (img_width, int(face_img.shape[0]*r))
-                resized_face_img = cv2.resize(face_img, dim, interpolation=cv2.INTER_AREA)
+                # img_width = 256
+                # r = img_width / face_img.shape[1]
+                # dim = (img_width, int(face_img.shape[0]*r))
+                # resized_face_img = cv2.resize(face_img, dim, interpolation=cv2.INTER_AREA)
+                resized_face_img = cv2.resize(face_img, (256,256), interpolation=cv2.INTER_AREA)
                 #####
                 # TODO: implement here. Do something with face_img
 
