@@ -1,0 +1,20 @@
+import pylab
+import argparse
+import json
+import matplotlib.pyplot as plt
+
+parser = argparse.ArgumentParser()
+parser.add_argument("result")
+args = parser.parse_args()
+
+xs = []
+ys = []
+for line in open(args.result):
+    print line
+    data = json.loads(line)
+    xs.append(data["iteration"])
+    ys.append(data["error"])
+print xs
+print ys
+
+plt.plot(xs,ys)
